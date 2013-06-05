@@ -58,17 +58,23 @@ CKEDITOR.plugins.add( 'mrmonkey', {
       while (characters >= 0) {
         var keypressInterval = Math.round(Math.random() * getSetting(editor, 'typeRandomMaxKeyStrokeInterval', 1000)); 
         CKEDITOR.tools.setTimeout(function() {
-          var codes = editor._mrmonkey.typeRandomKeyCodes.length - 1;
-          var index = Math.round(Math.random() * codes);
-          var keyCode = editor._mrmonkey.typeRandomKeyCodes[index];
-
-          // Simulate key event        
-          editor.fire('key', {
-            keyCode: keyCode
-          });
-        
-          // Add character into the editor
-          editor.insertHtml(String.fromCharCode(keyCode));
+          var selection = editor.getSelection();    
+          if (selection && (selection.getRanges().length > 0)) {
+            var codes = editor._mrmonkey.typeRandomKeyCodes.length - 1;
+            var index = Math.round(Math.random() * codes);
+            var keyCode = editor._mrmonkey.typeRandomKeyCodes[index];
+  
+            // Simulate key event        
+            editor.fire('key', {
+              keyCode: keyCode
+            });
+          
+            // Add character into the editor
+            editor.insertHtml(String.fromCharCode(keyCode));              
+          } else {
+            // We have lost selection somehow so we need to select something and try again
+            editor.fire('mrmonkey:changeSelection');
+          }
         }, keypressInterval);
         
         characters--;
