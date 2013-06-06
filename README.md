@@ -31,3 +31,35 @@ or in editor initialization:
       ...
       extraPlugins:'mrmonkey'
     }
+    
+Usage
+-----
+
+Using MrMonkey is easy. Just click the monkey head button on your toolbar and the monkey starts doing its thing.
+
+MrMonkey's behaviour can be configured from the settings view. If your browser supports Web Storage (Internet Explorer 8+, Firefox, Opera, Chrome and Safari) your settings are saved into your browser and you don't need to change them everytime you start your editor.
+
+You can also change the default settings by adding one or more of the following settings into your editor config (under mrmonkey setting):
+
+* pasteLoremIpsumInterval
+* typeRandomInterval
+* selectionChangeInterval
+* pasteLoremIpsum
+* typeRandom
+* selectionChange
+* typeRandomMaxKeyStrokesAtOnce
+* typeRandomKeyStrokeInterval
+* pasteLoremIpsumBlockSize
+* typeRandomKeys
+* pasteLoremIpsumText
+
+Example:
+
+    CKEDITOR.replace( 'editor', { 
+      ...
+      mrmonkey: {
+        pasteLoremIpsumInterval: 8000
+      }
+    }
+ 
+ 
