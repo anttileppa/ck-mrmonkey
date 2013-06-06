@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ck-mrmonkey" default="all">
+
+  <property name="project" value="mrmonkey" />
+  <property name="version" value="1.0.0" />
+<!--
+	<taskdef name="jsdoctoolkit" classname="uk.co.darrenhurley.ant.tasks.JsDocToolkit">
+	  <classpath path="${jsdoc-toolkit-ant-task}"></classpath>
+	  <classpath path="${jsdoc-home}/java/classes/js.jar"></classpath>
+	</taskdef>
+	
+	<property name="jsdocoutputdir" value="docs/apidocs" />
+-->
+	<description>Build file for ${project}</description>
+<!--
+	<target name="jsdoc" description="Generates jsdoc files">
+		<jsdoctoolkit jsdochome="${jsdoc-home}" template="jsdoc" outputdir="${jsdocoutputdir}" inputdir="src" />
+	</target>
+-->
+	<target name="build">
+		<delete dir="dist"/>
+		
+		<mkdir dir="dist"/>
+		<mkdir dir="dist/dialogs"/>
+		
+		<copy todir="dist">
+			<fileset dir="src" />
+	  </copy>
+
+		<java jar="${yuicompressor-jar}" fork="true">
+			<arg value="dist/plugin.js" />
+			<arg value="-o" />
+			<arg value="dist/plugin.js" />
+		</java>
+		
+		<java jar="${yuicompressor-jar}" fork="true">
+      <arg value="dist/dialogs/settings.js" />
+      <arg value="-o" />
+      <arg value="dist/dialogs/settings.js" />
+    </java>
+	</target>
+	
+	<target name="archives">
+	  <delete dir="archives"/>
+    <mkdir dir="archives"/>
+		
+		<mkdir dir="archives/dist"/>
+    <mkdir dir="archives/dist/${project}"/>
+    <mkdir dir="archives/full/${project}"/>
+		<mkdir dir="archives/full/${project}/src"/>
+		<!--
+    <mkdir dir="archives/full/${project}/docs"/>
+    -->
+    <mkdir dir="archives/full/${project}/dist"/>
+
+		<copy todir="archives/dist/${project}"> 
+		  <fileset dir="dist"/>
+		</copy>
+		
+		<copy todir="archives/full/${project}/dist" includeemptydirs="true"> 
+      <fileset dir="dist"/>
+    </copy>
+		<!--
+		<copy todir="archives/full/${project}/docs" includeemptydirs="true"> 
+		  <fileset dir="docs"/>
+		</copy>
+		-->
+		<copy todir="archives/full/${project}/src" includeemptydirs="true"> 
+		  <fileset dir="src"/>
+		</copy>
+    
+    <tar destfile="archives/${project}-${version}.tar" basedir="archives/dist/"></tar>
+    <gzip src="archives/${project}-${version}.tar" destfile="archives/${project}-${version}.tar.gz"/>
+    <bzip2 src="archives/${project}-${version}.tar" destfile="archives/${project}-${version}.tar.bz2"/>
+    <delete file="archives/${project}-${version}.tar"></delete>
+    <zip destfile="archives/${project}-${version}.zip" basedir="archives/dist/"></zip>
+    
+    <tar destfile="archives/${project}-${version}-src.tar" basedir="archives/full/"></tar>
+    <gzip src="archives/${project}-${version}-src.tar" destfile="archives/${project}-${version}-src.tar.gz"/>
+    <bzip2 src="archives/${project}-${version}-src.tar" destfile="archives/${project}-${version}-src.tar.bz2"/>
+    <delete file="archives/${project}-${version}-src.tar"></delete>
+    <zip destfile="archives/${project}-${version}-src.zip" basedir="archives/full/"></zip>
+		
+    <delete dir="archives/dist"/>
+    <delete dir="archives/full"/>
+	</target>
+	<!--
+  <target name="all" depends="build,jsdoc,archives"></target>
+  -->	
+  <target name="all" depends="build,archives"></target>
+</project>
